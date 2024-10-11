@@ -1,3 +1,12 @@
+---
+name: Bug report-Template
+about: report bug
+title: ''
+labels: ''
+assignees: beomzun
+
+---
+
 ## 📌 어떤 상황에서 발생한 버그인가요?
 
 > Given-When 형식으로 작성해주세요
