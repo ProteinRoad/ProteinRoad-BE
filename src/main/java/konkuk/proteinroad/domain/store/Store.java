@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.Comparator;
 import java.util.List;
 import konkuk.proteinroad.domain.base.BaseEntity;
 import konkuk.proteinroad.domain.menu.Menu;
@@ -31,4 +32,8 @@ public class Store extends BaseEntity {
 
     @OneToMany(mappedBy = "store")
     private List<Menu> menus;
+
+    public void sortMenus() {
+        menus.sort(Comparator.comparingInt(Menu::getProtein).reversed());
+    }
 }
