@@ -1,15 +1,18 @@
 package konkuk.proteinroad.domain.store;
 
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.util.Comparator;
-import java.util.List;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import konkuk.proteinroad.domain.base.BaseEntity;
-import konkuk.proteinroad.domain.menu.Menu;
+import konkuk.proteinroad.domain.brand.Brand;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,12 +31,19 @@ public class Store extends BaseEntity {
 
     private Float longitude;
 
-    private String imageUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="brand", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Brand brand;
 
-    @OneToMany(mappedBy = "store")
-    private List<Menu> menus;
+    @Builder
+    private Store(String name, Float latitude, Float longitude, String imageUrl, Brand brand) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.brand = brand;
+    }
 
-    public void sortMenus() {
-        menus.sort(Comparator.comparingInt(Menu::getProtein).reversed());
+    public void registerBrand(Brand brand) {
+        this.brand = brand;
     }
 }
