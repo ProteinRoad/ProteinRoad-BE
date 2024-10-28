@@ -13,7 +13,6 @@ import org.springframework.validation.FieldError;
 @RequiredArgsConstructor
 public class ErrorResponse {
 
-    private final String name;
     private final int code;
     private final String message;
 

@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommonErrorCode {
+public class BaseErrorCode implements ErrorCode {
 
-    BAD_REQUEST(new BaseErrorCode(4000, HttpStatus.BAD_REQUEST, "잘못된 파라미터입니다."));
-
-    private final ErrorCode errorCode;
+    private final int code;
+    private final HttpStatus httpStatus;
+    private final String message;
 }
