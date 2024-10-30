@@ -32,6 +32,7 @@ public class MenuServiceImpl implements MenuService {
         Menu menu = MenuConverter.toEntity(request);
         menu.registerBrand(brand);
         menu.registerImage(fileName);
+        brand.addMenu(menu);
 
         return menuRepository.save(menu).getId();
     }

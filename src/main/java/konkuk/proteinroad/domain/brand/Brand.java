@@ -43,4 +43,8 @@ public class Brand extends BaseEntity {
                 .imageKey(imageKey)
                 .build();
     }
+
+    public void addMenu(Menu menu) {
+        menus.add(menu);
+    }
 }
