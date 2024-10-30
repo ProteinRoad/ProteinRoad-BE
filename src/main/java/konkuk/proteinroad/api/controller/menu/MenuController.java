@@ -1,5 +1,7 @@
 package konkuk.proteinroad.api.controller.menu;
 
+import jakarta.validation.Valid;
+import java.net.URI;
 import konkuk.proteinroad.api.controller.menu.request.MenuCreateRequest;
 import konkuk.proteinroad.api.service.menu.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,11 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<Long> createMenu(
             @RequestPart(value = "file", required = false) MultipartFile multipartFile,
-            @RequestPart(value = "request") MenuCreateRequest menuCreateRequest
+            @Valid @RequestPart(value = "request") MenuCreateRequest menuCreateRequest
     ) {
         Long savedId = menuService.createMenu(menuCreateRequest.toServiceRequest(), multipartFile);
+        URI location = URI.create("/api/menus/" + savedId);
 
+        return ResponseEntity.created(location).build();
     }
 }

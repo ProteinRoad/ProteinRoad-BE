@@ -1,5 +1,6 @@
 package konkuk.proteinroad.api.controller.store;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import konkuk.proteinroad.api.controller.store.request.StoreCreateRequest;
 import konkuk.proteinroad.api.service.store.StoreService;
@@ -27,7 +28,7 @@ public class StoreController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Long> createStore(@RequestBody StoreCreateRequest request) {
+    public ResponseEntity<Long> createStore(@Valid @RequestBody StoreCreateRequest request) {
         Long savedId = storeService.createStore(request.toServiceRequest());
         URI location = URI.create("/api/stores/" + savedId);
 

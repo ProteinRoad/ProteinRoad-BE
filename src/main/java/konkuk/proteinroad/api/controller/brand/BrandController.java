@@ -1,5 +1,6 @@
 package konkuk.proteinroad.api.controller.brand;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import konkuk.proteinroad.api.controller.brand.request.BrandCreateRequest;
 import konkuk.proteinroad.api.service.brand.BrandService;
@@ -21,7 +22,7 @@ public class BrandController {
     @PostMapping("")
     public ResponseEntity<Long> createBrand(
             @RequestPart(value = "file", required = false) MultipartFile multipartFile,
-            @RequestPart(value = "request") BrandCreateRequest brandCreateRequest
+            @Valid @RequestPart(value = "request") BrandCreateRequest brandCreateRequest
     ) {
         Long savedId = brandService.createBrand(brandCreateRequest.toServiceRequest(), multipartFile);
         URI location = URI.create("/api/brands/" + savedId);
