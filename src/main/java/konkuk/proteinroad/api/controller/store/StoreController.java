@@ -4,7 +4,8 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import konkuk.proteinroad.api.controller.store.request.StoreCreateRequest;
 import konkuk.proteinroad.api.service.store.StoreService;
-import konkuk.proteinroad.api.service.store.dto.StoreDto;
+import konkuk.proteinroad.api.service.store.response.FindAllStoreWithMenuResponse;
+import konkuk.proteinroad.api.service.store.response.StoreDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,12 @@ public class StoreController {
     public ResponseEntity<StoreDto> findStoreBy(@PathVariable("storeId") Long storeId) {
 
         return ResponseEntity.ok(storeService.findStoreBy(storeId));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<FindAllStoreWithMenuResponse> findAllStores() {
+
+        return ResponseEntity.ok(storeService.findAllStoresWithMenus());
     }
 
     @PostMapping("/")

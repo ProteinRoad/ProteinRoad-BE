@@ -9,8 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.List;
 import konkuk.proteinroad.domain.base.BaseEntity;
 import konkuk.proteinroad.domain.brand.Brand;
+import konkuk.proteinroad.domain.menu.Menu;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +47,9 @@ public class Store extends BaseEntity {
 
     public void registerBrand(Brand brand) {
         this.brand = brand;
+    }
+
+    public List<Menu> getMenus() {
+        return brand.getMenus();
     }
 }
