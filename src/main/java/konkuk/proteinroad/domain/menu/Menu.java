@@ -44,7 +44,7 @@ public class Menu extends BaseEntity {
     private String imageKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="brand", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name="brand_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Brand brand;
 
     @Builder

@@ -32,7 +32,7 @@ public class Store extends BaseEntity {
     private Float longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="brand", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name="brand_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Brand brand;
 
     @Builder
