@@ -16,18 +16,11 @@ public class StoreDto {
 
     private final Float longitude;
 
-    private final String imageUrl;
-
-    private final List<Menu> menus;
-
     @Builder
-    private StoreDto(Long id, String name, Float latitude, Float longitude, String imageUrl,
-            List<Menu> menus) {
+    private StoreDto(Long id, String name, Float latitude, Float longitude) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.imageUrl = imageUrl;
-        this.menus = menus;
     }
 }
