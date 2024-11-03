@@ -52,4 +52,8 @@ public class Store extends BaseEntity {
     public List<Menu> getMenus() {
         return brand.getMenus();
     }
+
+    public String getImageKey() {
+        return brand.getImageKey();
+    }
 }

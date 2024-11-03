@@ -17,7 +17,7 @@ public class MenuConverter {
                 .build();
     }
 
-    public static MenuDto dtoOf(Menu menu) {
+    public static MenuDto dtoOf(Menu menu, String imageUrl) {
         return MenuDto.builder()
                 .id(menu.getId())
                 .name(menu.getName())
@@ -28,6 +28,7 @@ public class MenuConverter {
                 .fat(menu.getFat())
                 .calorie(menu.getCalorie())
                 .sodium(menu.getSodium())
+                .imageUrl(imageUrl)
                 .build();
     }
 }

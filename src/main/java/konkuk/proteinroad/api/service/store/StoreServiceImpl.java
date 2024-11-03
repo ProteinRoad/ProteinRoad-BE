@@ -5,6 +5,7 @@ import static konkuk.proteinroad.global.exception.errorCode.store.StoreErrorCode
 
 import java.util.List;
 import java.util.stream.Collectors;
+import konkuk.proteinroad.api.service.cache.CacheService;
 import konkuk.proteinroad.api.service.store.response.FindAllStoreWithMenuResponse;
 import konkuk.proteinroad.api.service.store.response.StoreDto;
 import konkuk.proteinroad.api.service.store.request.StoreCreateServiceRequest;
@@ -27,6 +28,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
     private final BrandRepository brandRepository;
+    private final CacheService imageUrlCacheService;
 
     @Transactional(readOnly = true)
     public StoreDto findStoreBy(Long storeId) {
@@ -63,9 +65,11 @@ public class StoreServiceImpl implements StoreService {
                         .latitude(store.getLatitude())
                         .longitude(store.getLongitude())
                         .menus(store.getMenus().stream()
-                                .map(MenuConverter::dtoOf)
+                                .map(menu->MenuConverter.dtoOf(menu, imageUrlCacheService.getImageUrl(menu.getImageKey())))
                                 .collect(Collectors.toList())
-                        ).build())
+                        )
+                        .imageUrl(imageUrlCacheService.getImageUrl(store.getImageKey()))
+                        .build())
                 .collect(Collectors.toList());
     }
 }
