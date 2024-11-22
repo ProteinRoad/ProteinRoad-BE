@@ -36,7 +36,6 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest .
-        docker tag ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
 
     # 6. SSH로 EC2에 접속하여 배포
@@ -83,7 +82,8 @@ jobs:
           # 헬스체크 실패 시 롤백
           if [ "$STATUS" != "200" ]; then
             echo "Health check failed. Rolling back..."
-            docker compose -f /path/to/docker-compose.yml down
+            docker stop $NEW_CONTAINER_NAME
+            docker rm $NEW_CONTAINER_NAME
             exit 1
           fi
 
