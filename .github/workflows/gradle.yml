@@ -1,0 +1,87 @@
+name: Blue-Green Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 소스 코드 체크아웃
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Docker Hub 로그인
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # 3. Docker 이미지 빌드 및 푸시
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t proteinroad/proteinroad:latest .
+        docker tag proteinroad/proteinroad:latest ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
+
+    # 4. SSH로 EC2에 접속하여 배포
+    - name: Deploy to EC2 (Blue-Green Deployment)
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: 22
+        script: |
+          # 1. 현재 실행 중인 컨테이너 확인
+          CURRENT=$(docker ps --filter "name=proteinRoad_container" --format "{{.Names}}")
+
+          if [ "$CURRENT" = "proteinRoad_container_blue" ]; then
+            NEW_CONTAINER_NAME="proteinRoad_container_green"
+            NEW_PORT="8081"  # 새로운 컨테이너의 포트
+          else
+            NEW_CONTAINER_NAME="proteinRoad_container_blue"
+            NEW_PORT="8080"  # 새로운 컨테이너의 포트
+          fi
+
+          echo "Deploying $NEW_CONTAINER_NAME on port $NEW_PORT..."
+
+          # Docker 이미지 최신 상태로 업데이트
+          docker pull ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
+          
+          # 새로운 컨테이너 실행
+          PORT=$NEW_PORT docker-compose -f ./docker-compose.yml up -d --no-deps --force-recreate
+
+          # 3. 헬스체크 API 호출로 상태 확인
+          echo "Waiting for health check on $NEW_CONTAINER_NAME..."
+          for i in {1..10}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$NEW_PORT/api/health/v1)
+            if [ "$STATUS" = "200" ]; then
+              echo "Health check passed!"
+              break
+            else
+              echo "Health check failed. Retrying in 5 seconds..."
+              sleep 10
+            fi
+          done
+
+          # 헬스체크 실패 시 롤백
+          if [ "$STATUS" != "200" ]; then
+            echo "Health check failed. Rolling back..."
+            docker-compose -f /path/to/docker-compose.yml down
+            exit 1
+          fi
+
+          # 이전 컨테이너 종료
+          if [ "$CURRENT" != "" ]; then
+            echo "Stopping and removing old container $CURRENT..."
+            docker stop $CURRENT
+            docker rm $CURRENT
+          fi
+
+          echo "Deployment of $NEW_CONTAINER_NAME complete!"
+
