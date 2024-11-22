@@ -32,7 +32,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
         return ErrorResponse.builder()
-                .name(errorCode.name())
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();
@@ -45,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request
     ) {
-        ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
+        ErrorCode errorCode = CommonErrorCode.BAD_REQUEST.getErrorCode();
         return handleExceptionInternal(e, errorCode);
     }
 
@@ -62,7 +61,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
 
         return ErrorResponse.builder()
-                .name(errorCode.name())
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .errors(validationErrorList)

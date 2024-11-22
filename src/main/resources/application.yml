@@ -1,4 +1,28 @@
 spring:
+  profiles:
+    default: local
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${BUCKET_REGION}
+    s3:
+      bucket: ${BUCKET_NAME}
+      base-file-name: ${BASE_FILE_NAME}
+    stack:
+      auto: false
+---
+spring:
+  config:
+    activate:
+      on-profile: local
   application:
     name: proteinRoad
   datasource:
@@ -17,3 +41,23 @@ spring:
 
 server:
   port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:~/proteinApplication
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
