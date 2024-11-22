@@ -36,7 +36,7 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         docker build -t proteinroad/proteinroad:latest .
-        docker tag proteinroad/proteinroad:latest ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
+        docker tag ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
 
     # 6. SSH로 EC2에 접속하여 배포
