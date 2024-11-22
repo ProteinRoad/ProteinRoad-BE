@@ -66,7 +66,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
           
           # 새로운 컨테이너 실행
-          PORT=$NEW_PORT docker compose -f ./docker-compose.yml up -d --no-deps --force-recreate
+          PORT=$NEW_PORT CONTAINER_NAME=$NEW_CONTAINER_NAME docker compose -f ./docker-compose.yml up -d --no-deps --force-recreate
 
           # 3. 헬스체크 API 호출로 상태 확인
           echo "Waiting for health check on $NEW_CONTAINER_NAME..."
