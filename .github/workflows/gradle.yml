@@ -60,7 +60,8 @@ jobs:
 
           echo "Deploying $NEW_CONTAINER_NAME on port $NEW_PORT..."
           echo "PORT=$NEW_PORT" > ./env/port.env
-
+          echo "CONTAINER_NAME=$NEW_CONTAINER_NAME" >> ./env/port.env
+          
           # Docker 이미지 최신 상태로 업데이트
           docker pull ${{ secrets.DOCKER_USERNAME }}/proteinroad:latest
           
